@@ -13,42 +13,51 @@ This project contains a TypeScript script to perform an airdrop of SPL tokens on
 
 ## Prerequisites
 
-- Node.js and npm installed on your machine. You can download them from [nodejs.org](https://nodejs.org/).
-- TypeScript installed globally. You can install it using npm:
-  ```bash
-  npm install -g typescript
-```
-## Installation
-#1. Clone the Repository:
+- Node.js and npm installed on your machine. You can download them from [nodejs.org](https://nodejs.org/)
+- TypeScript installed globally:
 
+```bash
+npm install -g typescript
+```
+
+## Installation
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/solana-airdrop.git
 cd solana-airdrop
 ```
-#2. Install Dependencies:
+
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
-Configuration
-Create a .env File:
 
-In the root of your project, create a file named .env.
-Add Required Attributes:
+## Configuration
 
-Add your private key and Helius RPC URL to the .env file:
+### Environment Setup
 
+1. Create a `.env` file in the root directory
+2. Add the following required attributes:
+
+```env
 ECLIPSE_PRIVATE_KEY=your_base58_encoded_private_key
 HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=your_helius_api_key
-Helius RPC URL Setup:
+```
 
-Sign up for an account at Helius to get your API key.
-Update the HELIUS_RPC_URL in your .env file with your API key.
-Recipient Data:
+### Helius RPC Setup
 
-Ensure you have a file named output2.json in the root of your project with the recipient data. The file should contain an array of recipient objects with the following structure:
+1. Sign up for an account at [Helius](https://helius.dev)
+2. Get your API key from the dashboard
+3. Update the `HELIUS_RPC_URL` in your `.env` file with your API key
 
+### Recipient Data
+
+Create an `output2.json` file in the project root with the following structure:
+
+```json
 [
   {
     "address": "recipient_address",
@@ -64,16 +73,33 @@ Ensure you have a file named output2.json in the root of your project with the r
     "frozen": false
   }
 ]
-Usage
-Run the Script:
+```
 
-Use ts-node to run your TypeScript file:
+## Usage
 
+### Running the Script
+
+Execute the airdrop script using ts-node:
+
+```bash
 npx ts-node airdrop_script.ts
-Monitor the Output:
+```
 
-The script will output the status of each transaction to the console. Check for any errors or failed transactions.
-Troubleshooting
-Check Logs: If the script fails, check the console logs for error messages.
-Validate Recipient Addresses: Ensure all recipient addresses in output2.json are valid Solana addresses.
-Network Issues: Ensure your internet connection is stable and that the Helius RPC URL is correct.
+### Monitoring
+
+The script will output the status of each transaction to the console. Watch for any error messages or failed transactions.
+
+## Troubleshooting
+
+### Common Issues
+
+- **Script Failures**: Check the console logs for detailed error messages
+- **Invalid Addresses**: Verify all recipient addresses in `output2.json` are valid Solana addresses
+- **Network Issues**: 
+  - Ensure stable internet connection
+  - Verify Helius RPC URL is correct
+  - Check Helius API key validity
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
