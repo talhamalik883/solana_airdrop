@@ -17,18 +17,20 @@ This project contains a TypeScript script to perform an airdrop of SPL tokens on
 - TypeScript installed globally. You can install it using npm:
   ```bash
   npm install -g typescript
+```
 ## Installation
-# 1. Clone the Repository:
+#1. Clone the Repository:
 
 
 ```bash
 git clone https://github.com/your-username/solana-airdrop.git
 cd solana-airdrop
-
-# 2. Install Dependencies:
+```
+#2. Install Dependencies:
 
 ```bash
 npm install
+```
 Configuration
 Create a .env File:
 
