@@ -25,7 +25,7 @@ npm install -g typescript
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/solana-airdrop.git
+git clone https://github.com/talhamalik883/solana-airdrop.git
 cd solana-airdrop
 ```
 
