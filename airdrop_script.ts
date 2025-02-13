@@ -65,6 +65,31 @@ interface TokenData {
 // Initialize an array to store recipient addresses
 let recipientAddresses: TokenData[] = [];
 
+// File to track processed addresses
+const PROCESSED_FILE = 'processed_addresses.json';
+
+/**
+ * Load processed addresses from a file.
+ * @returns A set of processed addresses.
+ */
+function loadProcessedAddresses(): Set<string> {
+  try {
+    const data = fs.readFileSync(PROCESSED_FILE, 'utf8');
+    const addresses = JSON.parse(data) as string[];
+    return new Set(addresses);
+  } catch (error) {
+    return new Set();
+  }
+}
+
+/**
+ * Save processed addresses to a file.
+ * @param addresses - A set of processed addresses.
+ */
+function saveProcessedAddresses(addresses: Set<string>) {
+  fs.writeFileSync(PROCESSED_FILE, JSON.stringify(Array.from(addresses)), 'utf8');
+}
+
 /**
  * Execute the airdrop of SPL tokens to recipients.
  */
@@ -72,9 +97,15 @@ export async function executeAirdrop() {
   try {
     logger.info('Starting airdrop execution...');
 
-    // Read recipient data from a JSON file
+    // Load recipient data from a JSON file
     const data = fs.readFileSync('./output.json', 'utf8');
     recipientAddresses = JSON.parse(data).filter((recipient: TokenData) => recipient.amount > 0);
+
+    // Load processed addresses
+    const processedAddresses = loadProcessedAddresses();
+
+    // Filter out already processed addresses
+    recipientAddresses = recipientAddresses.filter(recipient => !processedAddresses.has(recipient.owner));
 
     const failedRecipients: string[] = [];
     const chunkedRecipients = chunkArray(recipientAddresses, CHUNK_SIZE);
@@ -102,6 +133,11 @@ export async function executeAirdrop() {
       try {
         const txSignature = await sendAndConfirmTransaction(connection, transaction, [payerKeypair]);
         logger.info(`Chunk Transaction Succeeded: ${txSignature}`);
+
+        // Mark addresses as processed
+        for (const recipient of chunk) {
+          processedAddresses.add(recipient.owner);
+        }
       } catch (error) {
         logger.warn('Chunk transaction failed. Retrying individually:', error instanceof Error ? error.message : error);
 
@@ -110,7 +146,9 @@ export async function executeAirdrop() {
           const recipientTransaction = walletToInstructionMap.get(recipient.owner);
           if (recipientTransaction) {
             const isSuccessful = await sendTransactionWithRetries(recipientTransaction, recipient.owner);
-            if (!isSuccessful) {
+            if (isSuccessful) {
+              processedAddresses.add(recipient.owner);
+            } else {
               failedRecipients.push(recipient.owner);
             }
           }
@@ -119,7 +157,11 @@ export async function executeAirdrop() {
     }
 
     // Retry failed recipients
-    await retryFailedRecipients(failedRecipients);
+    await retryFailedRecipients(failedRecipients, processedAddresses);
+
+    // Save processed addresses
+    saveProcessedAddresses(processedAddresses);
+
     logger.info('Airdrop execution completed.');
   } catch (error) {
     logger.error('Error during airdrop:', error instanceof Error ? error.message : error);
@@ -194,8 +236,9 @@ async function sendTransactionWithRetries(transaction: Transaction, recipient: s
 /**
  * Retry failed recipients with multiple attempts.
  * @param failedRecipients - List of failed recipient addresses.
+ * @param processedAddresses - Set of processed addresses.
  */
-async function retryFailedRecipients(failedRecipients: string[]) {
+async function retryFailedRecipients(failedRecipients: string[], processedAddresses: Set<string>) {
   for (const failedRecipient of failedRecipients) {
     let success = false;
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
@@ -204,6 +247,7 @@ async function retryFailedRecipients(failedRecipients: string[]) {
         if (transaction) {
           await sendAndConfirmTransaction(connection, transaction, [payerKeypair]);
           logger.info(`Successfully retried for ${failedRecipient}`);
+          processedAddresses.add(failedRecipient);
           success = true;
           break;
         }
