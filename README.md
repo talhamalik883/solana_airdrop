@@ -98,6 +98,7 @@ solana-airdrop/
 ├── tsconfig.json        # TypeScript configuration
 ├── package.json         # Project dependencies and scripts
 ├── .env                 # Environment variables (ignored by git)
+├── .env.exmaple         # Environment variables example
 ├── output.json         # Recipient data file (ignored by git)
 └── .gitignore          # Git ignore rules
 ```
