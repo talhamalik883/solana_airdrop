@@ -1,38 +1,44 @@
-# Ignore node_modules directory
+# Dependencies
 node_modules/
+package-lock.json
 
-# Ignore environment variable files
+# Environment
 .env
 .env.local
 .env.*.local
 
-# Ignore log files
+# Build output
+dist/
+build/
+
+# Logs
 *.log
+airdrop.log
+
+# Project specific
+output.json
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Ignore log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # Ignore OS-specific files
-.DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db
-
-# Ignore IDE and editor files
-.vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Ignore build and coverage directories
-dist/
-build/
-coverage/
 
 # Ignore test files
 *.spec.ts

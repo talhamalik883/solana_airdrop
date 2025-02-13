@@ -8,6 +8,7 @@ This project contains a TypeScript script to perform an airdrop of SPL tokens on
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
+- [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 
@@ -55,7 +56,7 @@ HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=your_helius_api_key
 
 ### Recipient Data
 
-Create an `output2.json` file in the project root with the following structure:
+Create an `output.json` file in the project root with the following structure:
 
 ```json
 [
@@ -82,19 +83,39 @@ Create an `output2.json` file in the project root with the following structure:
 Execute the airdrop script using ts-node:
 
 ```bash
-npx ts-node airdrop_script.ts
+npx tsx airdrop_script.ts
 ```
 
 ### Monitoring
 
 The script will output the status of each transaction to the console. Watch for any error messages or failed transactions.
 
+## Project Structure
+
+```
+solana-airdrop/
+├── airdrop_script.ts    # Main script for token airdrop
+├── tsconfig.json        # TypeScript configuration
+├── package.json         # Project dependencies and scripts
+├── .env                 # Environment variables (ignored by git)
+├── output.json         # Recipient data file (ignored by git)
+└── .gitignore          # Git ignore rules
+```
+
+### Key Files
+
+- **airdrop_script.ts**: Contains the main logic for the SPL token airdrop
+- **output.json**: JSON file containing recipient addresses and token amounts
+- **.env**: Configuration file for private keys and RPC URLs
+- **tsconfig.json**: TypeScript compiler configuration
+- **package.json**: NPM package configuration and dependencies
+
 ## Troubleshooting
 
 ### Common Issues
 
 - **Script Failures**: Check the console logs for detailed error messages
-- **Invalid Addresses**: Verify all recipient addresses in `output2.json` are valid Solana addresses
+- **Invalid Addresses**: Verify all recipient addresses in `output.json` are valid Solana addresses
 - **Network Issues**: 
   - Ensure stable internet connection
   - Verify Helius RPC URL is correct
