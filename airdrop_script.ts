@@ -194,13 +194,17 @@ async function createRecipientTransaction(recipient: string): Promise<Transactio
       );
     }
 
+    // find owner in find and get amount to send
+    const recipientInfo = recipientAddresses.find(address => address.owner === recipient);
+	  if (!recipientInfo) return null;
+
     // Add instruction to transfer tokens
     transaction.add(
       createTransferInstruction(
         await getAssociatedTokenAddress(splTokenMintAddress, payerKeypair.publicKey),
         recipientTokenAddress,
         payerKeypair.publicKey,
-        10
+        recipientInfo.amount
       )
     );
 
